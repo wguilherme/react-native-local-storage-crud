@@ -13,7 +13,7 @@ import { styles } from './styles';
 export function Home() {
   const [data, setData] = useState<any>([]);
 
-  const { getItem, setItem } = useAsyncStorage("@savepass:passwords");
+  const { getItem, setItem } = useAsyncStorage("@tasksapp:tasks");
 
   async function handlFetchTasks() {
     const response = await getItem();
@@ -31,6 +31,7 @@ export function Home() {
   }
 
   useFocusEffect(useCallback(() => {
+    console.log('data', data)
     handlFetchTasks();
   }, []));
 
