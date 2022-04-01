@@ -1,10 +1,13 @@
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 import uuid from 'react-native-uuid';
 import { Button } from '../../components/Button';
 import { HeaderForm } from '../../components/HeaderForm';
 import { Input } from '../../components/Input';
 import { styles } from './styles';
+const { getItem, setItem } = useAsyncStorage("@tasksapp:tasks");
 
 
 
@@ -12,14 +15,49 @@ export function Form() {
 
   const [description, setDescription] = useState("")
 
-  function handleCreateTodo() {
+  async function handleCreateTodo() {
 
-    const todo = {
-      id: uuid.v4(),
-      description
+
+    try {
+      const id = uuid.v4()
+
+      const newTask: any = { id, description }
+
+      const response = await getItem();
+
+      const previousData = response ? JSON.parse(response) : [];
+
+      const data = [...previousData, newTask];
+
+      await setItem(JSON.stringify(data));
+
+      Toast.show({
+        type: 'success',
+        position: 'bottom',
+        text1: 'Tarefa salva com sucesso 🥳',
+        visibilityTime: 3000
+      })
+
+
+    }
+    catch (error: any) {
+      console.log('error', error?.message);
+
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Ocorreu um erro ao salvar a tarefa 😥',
+        text2: error.message,
+        visibilityTime: 3000
+      })
     }
 
-    console.log('todo', todo)
+
+
+
+
+
+
 
   }
 

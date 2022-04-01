@@ -1,21 +1,12 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-
 import { styles } from './styles';
 
-export type CardProps = {
-  id: string;
-  name: string;
-  user: string;
-  password: string;
-}
-type Props = {
-  data: CardProps;
-  onPress: () => void;
-}
 
-export function Card({ data, onPress }: Props) {
+
+
+export function Card({ data, onPress }: any) {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
 
   function togglePasswordIsVisible() {
@@ -35,10 +26,10 @@ export function Card({ data, onPress }: Props) {
       <View style={styles.content}>
         <View>
           <Text style={styles.title}>
-            {data.name}
+            {data?.description}
           </Text>
 
-       
+
         </View>
       </View>
 

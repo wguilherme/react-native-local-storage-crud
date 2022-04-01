@@ -1,14 +1,38 @@
-import { useState } from 'react';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { Button } from '../../components/Button';
-import { Card, CardProps } from '../../components/Card';
+import { Card } from '../../components/Card';
 import { HeaderHome } from '../../components/HeaderHome';
 import { styles } from './styles';
 
 
 
+
 export function Home() {
-  const [data, setData] = useState<CardProps[]>([]);
+  const [data, setData] = useState<any>([]);
+
+  const { getItem, setItem } = useAsyncStorage("@savepass:passwords");
+
+  async function handlFetchTasks() {
+    const response = await getItem();
+    const data = response ? JSON.parse(response) : [];
+    setData(data);
+  }
+
+  async function handleRemove(id: string) {
+    const response = await getItem();
+    const previousData = response ? JSON.parse(response) : [];
+
+    const data = previousData.filter((item: any) => item.id !== id);
+    setItem(JSON.stringify(data));
+    setData(data);
+  }
+
+  useFocusEffect(useCallback(() => {
+    handlFetchTasks();
+  }, []));
 
   return (
     <View style={styles.container}>
@@ -16,7 +40,7 @@ export function Home() {
 
       <View style={styles.listHeader}>
         <Text style={styles.title}>
-          Tarefas
+          Suas senhas
         </Text>
 
         <Text style={styles.listCount}>
@@ -32,14 +56,14 @@ export function Home() {
         renderItem={({ item }) =>
           <Card
             data={item}
-            onPress={() => { }}
+            onPress={() => handleRemove(item.id)}
           />
         }
       />
 
       <View style={styles.footer}>
         <Button
-          title="Limpar tarefas"
+          title="Limpar lista"
         />
       </View>
     </View>
