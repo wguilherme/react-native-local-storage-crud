@@ -41,7 +41,7 @@ export function Home() {
 
       <View style={styles.listHeader}>
         <Text style={styles.title}>
-          Suas senhas
+          Minhas tarefas
         </Text>
 
         <Text style={styles.listCount}>
